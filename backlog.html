@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Backlog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0d1a;
+            --bg-secondary: #13182f;
+            --bg-tertiary: #1a2140;
+            --accent-cyan: #00d9ff;
+            --accent-pink: #ff0080;
+            --accent-purple: #a259ff;
+            --accent-green: #00ff88;
+            --text-primary: #ffffff;
+            --text-secondary: #8b95b4;
+            --text-tertiary: #4a5578;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 128, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            background: var(--bg-primary);
+        }
+
+        .login-screen.hidden {
+            display: none;
+        }
+
+        .login-container {
+            background: var(--bg-secondary);
+            border-radius: 32px;
+            padding: 60px 50px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .login-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .user-select {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .user-btn {
+            padding: 18px;
+            background: linear-gradient(135deg, var(--bg-tertiary), rgba(26, 33, 64, 0.8));
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .user-btn:hover {
+            border-color: var(--accent-cyan);
+            transform: translateX(8px);
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+        }
+
+        .password-section {
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .password-section.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 18px 24px;
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            border-radius: 16px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 1.1em;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 0.2em;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: 16px;
+            color: var(--bg-primary);
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 217, 255, 0.5);
+        }
+
+        .back-btn {
+            margin-top: 16px;
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .back-btn:hover {
+            border-color: var(--text-tertiary);
+            background: var(--bg-tertiary);
+            box-shadow: none;
+        }
+
+        .error-message {
+            color: #ff0055;
+            margin-top: 16px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Main App Styles */
+        .app-container {
+            display: none;
+        }
+
+        .app-container.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-header {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 100;
+            background: var(--bg-secondary);
+            padding: 12px 24px;
+            border-radius: 100px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .view-user-select {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .view-user-select:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .viewing-banner {
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(162, 89, 255, 0.2));
+            border: 2px solid var(--accent-pink);
+            border-radius: 16px;
+            padding: 16px 24px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--accent-pink);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: none;
+        }
+
+        .viewing-banner.active {
+            display: block;
+        }
+
+        .current-user {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ff0055, #cc0044);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 0, 85, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.05), rgba(255, 0, 128, 0.05));
+            border-radius: 32px;
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        h1 {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 4.5em;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-pink), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: var(--text-secondary);
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.8;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .controls-bar {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 50px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding: 32px;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            border: 1px solid rgba(0, 217, 255, 0.15);
+        }
+
+        .stats-panel {
+            padding: 32px;
+            background: linear-gradient(135deg, var(--bg-secondary), rgba(162, 89, 255, 0.1));
+            border-radius: 24px;
+            border: 1px solid rgba(162, 89, 255, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            height: 100%;
+        }
+
+        .stat-item {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-value {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 3em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 1em;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1), 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        .section {
+            margin-bottom: 60px;
+            background: var(--bg-secondary);
+            border-radius: 32px;
+            padding: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .section-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 2.2em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .badge {
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 0.35em;
+            font-weight: 700;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(162, 89, 255, 0.2));
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            letter-spacing: 0.1em;
+        }
+
+        .add-game-btn {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-primary);
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .add-game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 217, 255, 0.5);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 28px;
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, var(--bg-tertiary), rgba(26, 33, 64, 0.8));
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink), var(--accent-purple));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.2);
+            border-color: rgba(0, 217, 255, 0.3);
+        }
+
+        .game-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .game-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 1.7em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .game-info {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-label {
+            color: var(--text-tertiary);
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .info-value {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-family: 'Chakra Petch', sans-serif;
+        }
+
+        .excitement-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 100px;
+            overflow: hidden;
+            margin-top: 8px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .excitement-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan), var(--accent-purple));
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 100px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .platform-tag, .genre-tag {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .platform-tag {
+            background: rgba(0, 217, 255, 0.15);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .genre-tag {
+            background: rgba(162, 89, 255, 0.15);
+            color: var(--accent-purple);
+            border: 1px solid rgba(162, 89, 255, 0.3);
+        }
+
+        .game-notes {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .game-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: var(--bg-primary);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 217, 255, 0.4);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ff0055, #cc0044);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 85, 0.4);
+        }
+
+        .live-service-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .live-game {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 217, 255, 0.05));
+            padding: 28px;
+            border-radius: 20px;
+            border-left: 4px solid var(--accent-green);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .live-game:hover {
+            transform: translateX(6px);
+            box-shadow: 0 8px 32px rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.4);
+        }
+
+        .priority-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+        }
+
+        .priority-column {
+            background: var(--bg-tertiary);
+            padding: 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+        }
+
+        .priority-column h3 {
+            font-family: 'Chakra Petch', sans-serif;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.2);
+            font-weight: 700;
+            font-size: 1.3em;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .priority-column ul {
+            list-style: none;
+        }
+
+        .priority-column li {
+            padding: 14px 18px;
+            margin: 10px 0;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .priority-column li:hover {
+            transform: translateX(6px);
+            border-color: var(--accent-cyan);
+            background: linear-gradient(90deg, rgba(0, 217, 255, 0.1), transparent);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 32px;
+            padding: 48px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 36px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .modal-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .close-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid rgba(255, 0, 85, 0.3);
+            color: #ff0055;
+            font-size: 1.5em;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-weight: 700;
+        }
+
+        .close-btn:hover {
+            background: linear-gradient(135deg, #ff0055, #cc0044);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 1em;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1), 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        .form-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 36px;
+        }
+
+        .btn-primary {
+            padding: 16px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-primary);
+            font-weight: 700;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 217, 255, 0.5);
+        }
+
+        .btn-secondary {
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+            border-color: var(--accent-cyan);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state-icon {
+            font-size: 5em;
+            margin-bottom: 24px;
+            opacity: 0.2;
+        }
+
+        .empty-state-text {
+            font-size: 1.3em;
+            font-weight: 600;
+            font-family: 'Chakra Petch', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        @media (max-width: 1024px) {
+            .controls-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .priority-section {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 28px;
+            }
+
+            .modal-content {
+                padding: 32px 24px;
+            }
+
+            .user-header {
+                position: static;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 100px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <h1 class="login-title">🎮 THE BACKLOG</h1>
+            <p class="login-subtitle">Select your profile to continue<br><small style="color: var(--text-tertiary); font-size: 0.85em;">(Password: backlog67 for all users)</small></p>
+            
+            <div class="user-select" id="userSelect">
+                <!-- User buttons will be added dynamically -->
+            </div>
+
+            <div class="password-section" id="passwordSection">
+                <input type="password" class="password-input" id="passwordInput" placeholder="Enter Password">
+                <button class="login-btn" onclick="attemptLogin()">LOGIN</button>
+                <button class="login-btn back-btn" onclick="backToUserSelect()">BACK</button>
+                <div class="error-message" id="errorMessage">Incorrect password. Try again.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <div class="user-header">
+            <span class="current-user" id="currentUser"></span>
+            <select class="view-user-select" id="viewUserSelect" onchange="switchViewUser()">
+                <option value="">View My Backlog</option>
+            </select>
+            <button class="logout-btn" onclick="logout()">LOGOUT</button>
+        </div>
+
+        <div class="container">
+            <div class="viewing-banner" id="viewingBanner">
+                📖 VIEWING READ-ONLY: <span id="viewingUsername"></span>'S BACKLOG
+            </div>
+
+            <header>
+                <h1>🎮 <span id="userNameDisplay"></span>'S GAMING BACKLOG</h1>
+                <p class="subtitle">
+                    Track your gaming journey. Add games, rate your excitement, and never forget where you left off.
+                </p>
+            </header>
+
+            <div class="controls-bar">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="searchInput">🔍 SEARCH</label>
+                        <input type="text" id="searchInput" placeholder="Search games...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="platformFilter">PLATFORM</label>
+                        <select id="platformFilter">
+                            <option value="all">All Platforms</option>
+                            <option value="PS5">PS5</option>
+                            <option value="PC">PC</option>
+                            <option value="Deck">Steam Deck</option>
+                            <option value="PSVR 2">PSVR 2</option>
+                            <option value="Gamepass">Gamepass</option>
+                            <option value="Switch">Switch</option>
+                            <option value="Xbox">Xbox</option>
+                            <option value="Portal">PS Portal</option>
+                            <option value="GeForce Now">GeForce Now</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sortBy">SORT BY</label>
+                        <select id="sortBy">
+                            <option value="excitement">Excitement Level</option>
+                            <option value="length">Game Length</option>
+                            <option value="name">Name (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stats-panel">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalGames">0</div>
+                            <div class="stat-label">GAMES</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="avgExcitement">0</div>
+                            <div class="stat-label">AVG HYPE</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalHours">0</div>
+                            <div class="stat-label">HOURS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Currently Playing / Perpetual -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">♾️ PERPETUAL / CURRENTLY PLAYING <span class="badge" id="playingCount">0 GAMES</span></h2>
+                    <button class="add-game-btn" onclick="openModal('playing')">
+                        <span>➕</span>
+                        <span>ADD GAME</span>
+                    </button>
+                </div>
+                <div class="games-grid" id="playingGames">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎮</div>
+                        <div class="empty-state-text">No games added yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backlog / Backburner -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">🔥 BACKBURNER / PAUSED <span class="badge" id="backlogCount">0 GAMES</span></h2>
+                    <button class="add-game-btn" onclick="openModal('backlog')">
+                        <span>➕</span>
+                        <span>ADD GAME</span>
+                    </button>
+                </div>
+                <div class="games-grid" id="backlogGames">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎮</div>
+                        <div class="empty-state-text">No games added yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">✅ COMPLETED / FINISHED <span class="badge" id="completedCount">0 GAMES</span></h2>
+                    <button class="add-game-btn" onclick="openModal('completed')">
+                        <span>➕</span>
+                        <span>ADD GAME</span>
+                    </button>
+                </div>
+                <div class="games-grid" id="completedGames">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎮</div>
+                        <div class="empty-state-text">No games added yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist / Upcoming -->
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">🔮 WISHLIST / UPCOMING <span class="badge" id="wishlistCount">0 GAMES</span></h2>
+                    <button class="add-game-btn" onclick="openModal('wishlist')">
+                        <span>➕</span>
+                        <span>ADD GAME</span>
+                    </button>
+                </div>
+                <div class="games-grid" id="wishlistGames">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎮</div>
+                        <div class="empty-state-text">No games added yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Game Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">ADD GAME</h2>
+                <button class="close-btn" onclick="closeModal()">✕</button>
+            </div>
+            <form id="gameForm">
+                <input type="hidden" id="gameId">
+                <input type="hidden" id="gameCategory">
+                
+                <div class="form-group">
+                    <label for="gameTitle">GAME TITLE</label>
+                    <input type="text" id="gameTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gameLength">LENGTH (HOURS)</label>
+                    <input type="number" id="gameLength" step="0.5">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gameExcitement">EXCITEMENT (1-10)</label>
+                    <input type="number" id="gameExcitement" min="1" max="10" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gamePlatform">PLATFORM(S)</label>
+                    <input type="text" id="gamePlatform" placeholder="e.g., PS5, PC, Steam Deck">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gameGenre">GENRE</label>
+                    <input type="text" id="gameGenre" placeholder="e.g., RPG, Action, Platformer">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gameRating">RATING (1-10)</label>
+                    <input type="number" id="gameRating" min="1" max="10" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gameNotes">NOTES</label>
+                    <textarea id="gameNotes" placeholder="Your thoughts, progress, and notes..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">SAVE GAME</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">CANCEL</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // User configuration - Default users (more can be added)
+        const DEFAULT_PASSWORD = 'backlog67';
+        let USERS = {
+            'alec': DEFAULT_PASSWORD,
+            'luke': DEFAULT_PASSWORD,
+            'sam': DEFAULT_PASSWORD
+        };
+
+        // Load users from localStorage
+        function loadUsers() {
+            const savedUsers = localStorage.getItem('theBacklogUsers');
+            if (savedUsers) {
+                USERS = JSON.parse(savedUsers);
+            }
+        }
+
+        // Save users to localStorage
+        function saveUsers() {
+            localStorage.setItem('theBacklogUsers', JSON.stringify(USERS));
+        }
+
+        // Initialize Alec's data from original spreadsheet
+        function initializeAlecData() {
+            const savedGames = localStorage.getItem('theBacklogGames');
+            if (savedGames) {
+                const parsed = JSON.parse(savedGames);
+                // Only initialize if Alec doesn't have data yet
+                if (!parsed['alec'] || Object.values(parsed['alec']).every(arr => arr.length === 0)) {
+                    parsed['alec'] = getAlecDefaultData();
+                    localStorage.setItem('theBacklogGames', JSON.stringify(parsed));
+                }
+            } else {
+                // First time - create with Alec's data
+                const newGames = { 'alec': getAlecDefaultData() };
+                localStorage.setItem('theBacklogGames', JSON.stringify(newGames));
+            }
+        }
+
+        // Alec's original spreadsheet data
+        function getAlecDefaultData() {
+            return {
+                playing: [
+                    {
+                        id: 'playing1',
+                        title: 'Hades 2',
+                        length: null,
+                        excitement: '10',
+                        platform: 'PC',
+                        genre: 'Rogue Lite',
+                        rating: '8.5',
+                        notes: 'Early Access. Chipping away at runs but don\'t want to get burnt out or catch up to where the content stops so taking my time with it. Amazing game though, probably game of the year for whatever year the full release comes out.'
+                    },
+                    {
+                        id: 'playing2',
+                        title: 'Dave the Diver',
+                        length: '23',
+                        excitement: '8',
+                        platform: 'Steam Deck',
+                        genre: 'Indie',
+                        rating: null,
+                        notes: 'Deck game great for traveling. Will finish it eventually.'
+                    },
+                    {
+                        id: 'playing3',
+                        title: 'Pepper Grinder',
+                        length: '4',
+                        excitement: '7',
+                        platform: 'PC',
+                        genre: '2D Platformer',
+                        rating: null,
+                        notes: 'Another good one with some fun gameplay and little story. Good to play at the fams when I want to not participate in bullshitery.'
+                    },
+                    {
+                        id: 'playing4',
+                        title: 'Cult of the Lamb',
+                        length: '14.5',
+                        excitement: '8',
+                        platform: 'PS5, Portal',
+                        genre: 'Action Roguelite',
+                        rating: null,
+                        notes: 'Good turn off brain game but have a lot of those available atm. I\'ll get back around to this one.'
+                    },
+                    {
+                        id: 'playing5',
+                        title: 'Cuphead',
+                        length: '14',
+                        excitement: '7',
+                        platform: 'PS5',
+                        genre: 'Side Action',
+                        rating: null,
+                        notes: 'Been playing coop, will finish with a partner eventually.'
+                    },
+                    {
+                        id: 'playing6',
+                        title: 'Cavern of Dreams',
+                        length: '5',
+                        excitement: '7',
+                        platform: 'PC, Steam Deck',
+                        genre: 'Platformer',
+                        rating: null,
+                        notes: null
+                    }
+                ],
+                backlog: [
+                    {
+                        id: 'backlog1',
+                        title: 'Hollow Knight: Silksong',
+                        length: '28',
+                        excitement: '9',
+                        platform: 'Gamepass',
+                        genre: 'Soulslike Metroidvania',
+                        rating: null,
+                        notes: 'Made it about 15 hours in and paused to play something else. I want to dedicate full attention to this one. I will be back soon.'
+                    },
+                    {
+                        id: 'backlog2',
+                        title: 'Kingdom Come: Deliverance',
+                        length: '40',
+                        excitement: '7',
+                        platform: 'PC',
+                        genre: 'Open World RPG',
+                        rating: null,
+                        notes: 'Liked the opening. A huge game I want to get back to before starting 2.'
+                    },
+                    {
+                        id: 'backlog3',
+                        title: 'Outer Wilds',
+                        length: '17',
+                        excitement: '9.5',
+                        platform: 'PC',
+                        genre: 'Exploration Sci-Fi',
+                        rating: null,
+                        notes: 'Top of the list to return to. Only heard best game all time so need to roll credits here.'
+                    },
+                    {
+                        id: 'backlog4',
+                        title: 'Resident Evil 4 VR',
+                        length: '16',
+                        excitement: '8.5',
+                        platform: 'PSVR 2',
+                        genre: 'Survival Horror',
+                        rating: null,
+                        notes: 'Plan to beat before RE 9.'
+                    },
+                    {
+                        id: 'backlog5',
+                        title: 'Alien VR',
+                        length: '8',
+                        excitement: '7',
+                        platform: 'PSVR 2',
+                        genre: 'FPS VR Shooter',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'backlog6',
+                        title: 'Behemoth VR',
+                        length: '7',
+                        excitement: '7.5',
+                        platform: 'PSVR 2',
+                        genre: 'Action Adventure VR',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'backlog7',
+                        title: 'Midnight Walk VR',
+                        length: '4',
+                        excitement: '8',
+                        platform: 'PSVR 2',
+                        genre: 'Horror Adventure',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'backlog8',
+                        title: 'Final Fantasy VII Remake',
+                        length: '32.5',
+                        excitement: '8',
+                        platform: 'PS5',
+                        genre: 'Action RPG',
+                        rating: null,
+                        notes: 'Was really enjoying this one more than I thought I would but put it down because I wanted to give it my full attention and picked up another game in the meantime. Just never got around to getting back to it but I do want to come back and finish it. I got decently far into the game.'
+                    },
+                    {
+                        id: 'backlog9',
+                        title: 'Aliens: Dark Descent',
+                        length: '22.5',
+                        excitement: '7',
+                        platform: 'PC, Steam Deck',
+                        genre: 'RTS',
+                        rating: null,
+                        notes: 'Just dropped off. Was having fun but there\'s a learning curve and I haven\'t played many games in this genre. My men were dying and you have to start with new guys if you can\'t save them. Need to lock it in and learn how to get good.'
+                    },
+                    {
+                        id: 'backlog10',
+                        title: 'Baldur\'s Gate 3',
+                        length: '58',
+                        excitement: '8',
+                        platform: 'PC',
+                        genre: 'RPG',
+                        rating: null,
+                        notes: 'Really enjoyed Act 1 and stepped away after putting about 10 hours into the game over two sessions. Just wanted to give this game my full attention and not rush through. Will pick it back up when I can focus on it 100%.'
+                    },
+                    {
+                        id: 'backlog11',
+                        title: 'Fallout 3 + New Vegas: Tale of Two Wastelands',
+                        length: '49',
+                        excitement: '8',
+                        platform: 'PC, Steam Deck',
+                        genre: 'Open World RPG',
+                        rating: null,
+                        notes: 'Grinded the opening of Fallout 3 after the show came out. Had a lot of fun with it but kept getting pulled away with work and other responsibilities. I think I want to try and get this working on the deck. Either way Vegas has been on this backlog for far too long. I will beat these games.'
+                    },
+                    {
+                        id: 'backlog12',
+                        title: 'Dead Island 2 + SoLA + Haus DLC',
+                        length: '23',
+                        excitement: '7',
+                        platform: 'PS5',
+                        genre: 'Open World FP RPG',
+                        rating: null,
+                        notes: 'Fun enough but too many other good games out and on the list. Might be a good PS Portal game on the couch while watching sports.'
+                    }
+                ],
+                completed: [],
+                wishlist: [
+                    {
+                        id: 'wishlist1',
+                        title: 'Ghost of Yotei',
+                        length: '28',
+                        excitement: '9',
+                        platform: 'PS5',
+                        genre: 'Open World RPG',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist2',
+                        title: 'Split Fiction',
+                        length: '14',
+                        excitement: '7.5',
+                        platform: 'PS5',
+                        genre: 'Couch Co-op',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist3',
+                        title: 'Borderlands 4',
+                        length: '18',
+                        excitement: '8',
+                        platform: 'GeForce Now',
+                        genre: 'Looter Shooter',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist4',
+                        title: 'Dispatch',
+                        length: '8',
+                        excitement: '8',
+                        platform: 'PS5',
+                        genre: 'Story',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist5',
+                        title: 'Phantom Blade Zero',
+                        length: null,
+                        excitement: '9',
+                        platform: null,
+                        genre: 'Action',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist6',
+                        title: 'The Wolf Among Us 2',
+                        length: null,
+                        excitement: '7',
+                        platform: null,
+                        genre: 'Narrative Adventure',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist7',
+                        title: 'Civilization 7',
+                        length: null,
+                        excitement: null,
+                        platform: 'PC',
+                        genre: 'Strategy',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist8',
+                        title: 'Battlefield 6',
+                        length: null,
+                        excitement: null,
+                        platform: 'PC',
+                        genre: 'FPS Multiplayer',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist9',
+                        title: 'Hell is Us',
+                        length: null,
+                        excitement: '7',
+                        platform: null,
+                        genre: 'Action Adventure',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist10',
+                        title: 'Starship Troopers: Continuum',
+                        length: null,
+                        excitement: '6.5',
+                        platform: 'PSVR 2',
+                        genre: 'VR FPS',
+                        rating: null,
+                        notes: null
+                    },
+                    {
+                        id: 'wishlist11',
+                        title: 'Assassin\'s Creed Shadows DLC 1',
+                        length: null,
+                        excitement: null,
+                        platform: 'PS5',
+                        genre: 'Action RPG',
+                        rating: null,
+                        notes: null
+                    }
+                ]
+            };
+        }
+
+        // Add new user
+        function addNewUser(username) {
+            if (!username || username.trim() === '') {
+                return false;
+            }
+            
+            username = username.toLowerCase().trim();
+            
+            if (USERS[username]) {
+                alert('User already exists!');
+                return false;
+            }
+            
+            // Silently set password to backlog67
+            USERS[username] = DEFAULT_PASSWORD;
+            saveUsers();
+            createUserButtons();
+            return true;
+        }
+
+        let currentUser = null;
+        let selectedUser = null;
+        let userGames = {};
+        let viewingUser = null; // User whose backlog we're viewing
+
+        // Initialize
+        function init() {
+            loadUsers();
+            loadUserGames();
+            initializeAlecData(); // Pre-populate Alec's data from spreadsheet
+            createUserButtons();
+            checkAutoLogin();
+        }
+
+        // Create user selection buttons
+        function createUserButtons() {
+            const userSelect = document.getElementById('userSelect');
+            userSelect.innerHTML = '';
+            
+            Object.keys(USERS).forEach(username => {
+                const btn = document.createElement('button');
+                btn.className = 'user-btn';
+                btn.textContent = username.toUpperCase();
+                btn.onclick = () => selectUser(username);
+                userSelect.appendChild(btn);
+            });
+
+            // Add "Add New User" button
+            const addUserBtn = document.createElement('button');
+            addUserBtn.className = 'user-btn';
+            addUserBtn.style.background = 'linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(162, 89, 255, 0.2))';
+            addUserBtn.style.borderColor = 'var(--accent-cyan)';
+            addUserBtn.innerHTML = '➕ ADD NEW USER';
+            addUserBtn.onclick = () => promptAddUser();
+            userSelect.appendChild(addUserBtn);
+        }
+
+        // Prompt to add new user
+        function promptAddUser() {
+            const username = prompt('Enter new username (lowercase, no spaces):');
+            if (username) {
+                const cleaned = username.toLowerCase().replace(/\s+/g, '');
+                if (cleaned) {
+                    if (addNewUser(cleaned)) {
+                        alert(`User "${cleaned}" created! Password is backlog67`);
+                    }
+                } else {
+                    alert('Invalid username. Please use letters and numbers only.');
+                }
+            }
+        }
+
+        // Select user
+        function selectUser(username) {
+            selectedUser = username;
+            document.getElementById('userSelect').style.display = 'none';
+            document.getElementById('passwordSection').classList.add('active');
+            document.getElementById('passwordInput').focus();
+        }
+
+        // Back to user select
+        function backToUserSelect() {
+            selectedUser = null;
+            document.getElementById('userSelect').style.display = 'grid';
+            document.getElementById('passwordSection').classList.remove('active');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+
+        // Attempt login
+        function attemptLogin() {
+            const password = document.getElementById('passwordInput').value;
+            
+            if (password === USERS[selectedUser]) {
+                currentUser = selectedUser;
+                localStorage.setItem('currentUser', currentUser);
+                showApp();
+            } else {
+                document.getElementById('errorMessage').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('errorMessage').classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Check auto login
+        function checkAutoLogin() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser && USERS[savedUser]) {
+                currentUser = savedUser;
+                showApp();
+            }
+        }
+
+        // Show app
+        function showApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appContainer').classList.add('active');
+            document.getElementById('currentUser').textContent = currentUser.toUpperCase();
+            document.getElementById('userNameDisplay').textContent = currentUser.toUpperCase();
+            
+            // Populate view user dropdown
+            const viewSelect = document.getElementById('viewUserSelect');
+            viewSelect.innerHTML = '<option value="">View My Backlog</option>';
+            Object.keys(USERS).forEach(username => {
+                if (username !== currentUser) {
+                    const option = document.createElement('option');
+                    option.value = username;
+                    option.textContent = `View ${username.toUpperCase()}'s Backlog`;
+                    viewSelect.appendChild(option);
+                }
+            });
+            
+            viewingUser = null;
+            loadUserData();
+        }
+
+        // Switch view user
+        function switchViewUser() {
+            const selectedView = document.getElementById('viewUserSelect').value;
+            viewingUser = selectedView || null;
+            
+            const banner = document.getElementById('viewingBanner');
+            const viewingUsername = document.getElementById('viewingUsername');
+            
+            if (viewingUser) {
+                banner.classList.add('active');
+                viewingUsername.textContent = viewingUser.toUpperCase();
+                document.getElementById('userNameDisplay').textContent = viewingUser.toUpperCase();
+            } else {
+                banner.classList.remove('active');
+                document.getElementById('userNameDisplay').textContent = currentUser.toUpperCase();
+            }
+            
+            loadUserData();
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                viewingUser = null;
+                localStorage.removeItem('currentUser');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('appContainer').classList.remove('active');
+                document.getElementById('viewingBanner').classList.remove('active');
+                document.getElementById('viewUserSelect').value = '';
+                backToUserSelect();
+            }
+        }
+
+        // Load user games from localStorage
+        function loadUserGames() {
+            const saved = localStorage.getItem('theBacklogGames');
+            if (saved) {
+                userGames = JSON.parse(saved);
+            }
+        }
+
+        // Save user games
+        function saveUserGames() {
+            localStorage.setItem('theBacklogGames', JSON.stringify(userGames));
+        }
+
+        // Get current user's games (or viewing user's games)
+        function getCurrentUserGames() {
+            const targetUser = viewingUser || currentUser;
+            if (!userGames[targetUser]) {
+                userGames[targetUser] = {
+                    playing: [],
+                    backlog: [],
+                    completed: [],
+                    wishlist: []
+                };
+            }
+            return userGames[targetUser];
+        }
+
+        // Check if in view-only mode
+        function isViewOnly() {
+            return viewingUser !== null;
+        }
+
+        // Load user data
+        function loadUserData() {
+            const games = getCurrentUserGames();
+            renderAllGames();
+            updateStats();
+        }
+
+        // Create game card
+        function createGameCard(game, category) {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.dataset.gameId = game.id;
+            
+            let html = `<div class="game-title">${game.title}</div><div class="game-info">`;
+            
+            if (game.length) {
+                html += `<div class="info-row"><span class="info-label">LENGTH</span><span class="info-value">~${game.length} hours</span></div>`;
+            }
+            
+            if (game.excitement) {
+                html += `<div class="info-row"><span class="info-label">EXCITEMENT</span><span class="info-value">${game.excitement}/10</span></div>
+                <div class="excitement-bar"><div class="excitement-fill" style="width: ${game.excitement * 10}%"></div></div>`;
+            }
+            
+            if (game.rating) {
+                html += `<div class="info-row"><span class="info-label">RATING</span><span class="info-value">${game.rating}/10</span></div>`;
+            }
+            
+            html += `</div><div class="tags-container">`;
+            
+            if (game.platform) {
+                const platforms = game.platform.split(',').map(p => p.trim());
+                platforms.forEach(platform => {
+                    html += `<span class="platform-tag">${platform.toUpperCase()}</span>`;
+                });
+            }
+            
+            if (game.genre) {
+                html += `<span class="genre-tag">${game.genre.toUpperCase()}</span>`;
+            }
+            
+            html += `</div>`;
+            
+            if (game.notes) {
+                html += `<div class="game-notes">${game.notes}</div>`;
+            }
+            
+            // Only show edit/delete buttons if NOT in view-only mode
+            if (!isViewOnly()) {
+                html += `<div class="game-actions">
+                    <button onclick="editGame('${category}', '${game.id}')" class="btn btn-edit">EDIT</button>
+                    <button onclick="deleteGame('${category}', '${game.id}')" class="btn btn-delete">DELETE</button>
+                </div>`;
+            }
+            
+            card.innerHTML = html;
+            return card;
+        }
+
+        // Render all games
+        function renderAllGames() {
+            const games = getCurrentUserGames();
+            const viewOnly = isViewOnly();
+            
+            ['playing', 'backlog', 'completed', 'wishlist'].forEach(category => {
+                const section = document.getElementById(category + 'Games');
+                if (!section) return;
+
+                section.innerHTML = '';
+                
+                if (games[category].length === 0) {
+                    section.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🎮</div><div class="empty-state-text">No games added yet</div></div>';
+                } else {
+                    games[category].forEach(game => {
+                        section.appendChild(createGameCard(game, category));
+                    });
+                }
+
+                const countBadge = document.getElementById(category + 'Count');
+                if (countBadge) {
+                    countBadge.textContent = `${games[category].length} GAMES`;
+                }
+            });
+
+            // Hide/show add game buttons based on view mode
+            document.querySelectorAll('.add-game-btn').forEach(btn => {
+                btn.style.display = viewOnly ? 'none' : 'flex';
+            });
+        }
+
+        // Open modal
+        function openModal(category, gameId = null) {
+            const modal = document.getElementById('gameModal');
+            const form = document.getElementById('gameForm');
+            const title = document.getElementById('modalTitle');
+            
+            form.reset();
+            document.getElementById('gameCategory').value = category;
+            
+            if (gameId) {
+                title.textContent = 'EDIT GAME';
+                const games = getCurrentUserGames();
+                const game = games[category].find(g => g.id === gameId);
+                if (game) {
+                    document.getElementById('gameId').value = game.id;
+                    document.getElementById('gameTitle').value = game.title;
+                    document.getElementById('gameLength').value = game.length || '';
+                    document.getElementById('gameExcitement').value = game.excitement || '';
+                    document.getElementById('gamePlatform').value = game.platform || '';
+                    document.getElementById('gameGenre').value = game.genre || '';
+                    document.getElementById('gameRating').value = game.rating || '';
+                    document.getElementById('gameNotes').value = game.notes || '';
+                }
+            } else {
+                title.textContent = 'ADD GAME';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('gameModal').classList.remove('active');
+        }
+
+        // Edit game
+        function editGame(category, gameId) {
+            openModal(category, gameId);
+        }
+
+        // Delete game
+        function deleteGame(category, gameId) {
+            if (!confirm('Are you sure you want to delete this game?')) return;
+            
+            const games = getCurrentUserGames();
+            games[category] = games[category].filter(g => g.id !== gameId);
+            saveUserGames();
+            renderAllGames();
+            updateStats();
+        }
+
+        // Handle form submission
+        document.getElementById('gameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const category = document.getElementById('gameCategory').value;
+            const gameId = document.getElementById('gameId').value;
+            const games = getCurrentUserGames();
+            
+            const game = {
+                id: gameId || Date.now().toString(),
+                title: document.getElementById('gameTitle').value,
+                length: document.getElementById('gameLength').value || null,
+                excitement: document.getElementById('gameExcitement').value || null,
+                platform: document.getElementById('gamePlatform').value || null,
+                genre: document.getElementById('gameGenre').value || null,
+                rating: document.getElementById('gameRating').value || null,
+                notes: document.getElementById('gameNotes').value || null
+            };
+            
+            if (gameId) {
+                const index = games[category].findIndex(g => g.id === gameId);
+                if (index !== -1) {
+                    games[category][index] = game;
+                }
+            } else {
+                games[category].push(game);
+            }
+            
+            saveUserGames();
+            renderAllGames();
+            updateStats();
+            closeModal();
+        });
+
+        // Search and filter
+        const searchInput = document.getElementById('searchInput');
+        const platformFilter = document.getElementById('platformFilter');
+        const sortBy = document.getElementById('sortBy');
+
+        searchInput.addEventListener('input', filterGames);
+        platformFilter.addEventListener('change', filterGames);
+        sortBy.addEventListener('change', sortGames);
+
+        function filterGames() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const platform = platformFilter.value.toLowerCase();
+            const allCards = document.querySelectorAll('.game-card');
+
+            allCards.forEach(card => {
+                const title = card.querySelector('.game-title').textContent.toLowerCase();
+                const platforms = Array.from(card.querySelectorAll('.platform-tag'))
+                    .map(tag => tag.textContent.toLowerCase());
+                
+                const matchesSearch = title.includes(searchTerm);
+                const matchesPlatform = platform === 'all' || platforms.some(p => p.includes(platform));
+
+                card.style.display = (matchesSearch && matchesPlatform) ? 'block' : 'none';
+            });
+        }
+
+        function sortGames() {
+            const sections = ['playingGames', 'backlogGames', 'completedGames', 'wishlistGames'];
+            const sortType = sortBy.value;
+
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (!section) return;
+
+                const cards = Array.from(section.querySelectorAll('.game-card'));
+                
+                cards.sort((a, b) => {
+                    if (sortType === 'name') {
+                        const nameA = a.querySelector('.game-title').textContent;
+                        const nameB = b.querySelector('.game-title').textContent;
+                        return nameA.localeCompare(nameB);
+                    } else if (sortType === 'excitement') {
+                        const exciteA = parseFloat(a.textContent.match(/EXCITEMENT\s+([\d.]+)/)?.[1]) || 0;
+                        const exciteB = parseFloat(b.textContent.match(/EXCITEMENT\s+([\d.]+)/)?.[1]) || 0;
+                        return exciteB - exciteA;
+                    } else if (sortType === 'length') {
+                        const lengthA = parseFloat(a.textContent.match(/~([\d.]+) hours/)?.[1]) || 0;
+                        const lengthB = parseFloat(b.textContent.match(/~([\d.]+) hours/)?.[1]) || 0;
+                        return lengthA - lengthB;
+                    }
+                    return 0;
+                });
+
+                cards.forEach(card => section.appendChild(card));
+            });
+        }
+
+        // Update stats
+        function updateStats() {
+            const games = getCurrentUserGames();
+            let totalGames = 0;
+            let totalExcitement = 0;
+            let excitementCount = 0;
+            let totalHours = 0;
+
+            Object.values(games).forEach(categoryGames => {
+                categoryGames.forEach(game => {
+                    totalGames++;
+                    if (game.excitement) {
+                        totalExcitement += parseFloat(game.excitement);
+                        excitementCount++;
+                    }
+                    if (game.length) {
+                        totalHours += parseFloat(game.length);
+                    }
+                });
+            });
+
+            document.getElementById('totalGames').textContent = totalGames;
+            document.getElementById('avgExcitement').textContent = excitementCount > 0 ? (totalExcitement / excitementCount).toFixed(1) : '0';
+            document.getElementById('totalHours').textContent = Math.round(totalHours);
+        }
+
+        // Allow Enter key to login
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                attemptLogin();
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('gameModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize app
+        init();
+    </script>
+</body>
+</html>
